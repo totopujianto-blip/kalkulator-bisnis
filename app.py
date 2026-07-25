@@ -1,82 +1,230 @@
 import streamlit as st
+import streamlit.components.v1 as components
 
-# Konfigurasi Halaman
+# Konfigurasi Halaman Streamlit
 st.set_page_config(
-    page_title="Generator Infografis & Ringkasan", 
-    page_icon="🎨",
-    layout="centered"
+    page_title="Generator Carousel Media Sosial", 
+    page_icon="📱",
+    layout="wide"
 )
 
-st.title("🎨 Generator Infografis & Ringkasan Bisnis")
-st.write("Buat kartu ringkasan visual yang rapi dan profesional dalam hitungan detik.")
+st.title("📱 Generator Carousel Media Sosial")
+st.write("Buat slide carousel bertema profesional untuk Instagram/LinkedIn dalam hitungan detik!")
 
-# Sidebar untuk Input Data
-st.sidebar.header("⚙️ Pengaturan Infografis")
-judul = st.sidebar.text_input("Judul Infografis:", value="Laporan Performa Keuangan")
-subjudul = st.sidebar.text_input("Sub-Judul / Periode:", value="Kuartal I - Kantor Akuntan")
+# Sidebar Pengaturan Desain & Konten
+st.sidebar.header("🎨 Desain & Tema")
+theme_style = st.sidebar.selectbox("Pilih Gaya Warna Slide:", [
+    "Navy Professional (Biru Gelap)", 
+    "Emerald Business (Hijau Elegan)", 
+    "Dark Slate (Minimalis Modern)", 
+    "Gradient Sunset (Energetik)"
+])
 
-theme_color = st.sidebar.color_picker("Warna Tema Utama:", "#1E3A8A") # Warna Biru Gelap
-bg_color = st.sidebar.color_picker("Warna Latar Belakang:", "#F8FAFC")
+# Penentuan Skema Warna
+if "Navy" in theme_style:
+    bg_style = "linear-gradient(135deg, #0f172a 0%, #1e3a8a 100%)"
+    card_bg = "rgba(255, 255, 255, 0.08)"
+    text_color = "#ffffff"
+    accent_color = "#38bdf8"
+elif "Emerald" in theme_style:
+    bg_style = "linear-gradient(135deg, #064e3b 0%, #047857 100%)"
+    card_bg = "rgba(255, 255, 255, 0.08)"
+    text_color = "#ffffff"
+    accent_color = "#34d399"
+elif "Dark Slate" in theme_style:
+    bg_style = "linear-gradient(135deg, #18181b 0%, #27272a 100%)"
+    card_bg = "rgba(255, 255, 255, 0.05)"
+    text_color = "#ffffff"
+    accent_color = "#fbbf24"
+else:
+    bg_style = "linear-gradient(135deg, #4c0519 0%, #881337 100%)"
+    card_bg = "rgba(255, 255, 255, 0.08)"
+    text_color = "#ffffff"
+    accent_color = "#fb7185"
 
-st.sidebar.subheader("📊 Poin-Poin Utama")
-poin1_label = st.sidebar.text_input("Label 1:", value="Total Pendapatan")
-poin1_val = st.sidebar.text_input("Nilai 1:", value="Rp 150.000.000")
+st.sidebar.subheader("✍️ Isi Konten Slide")
 
-poin2_label = st.sidebar.text_input("Label 2:", value="Margin Keuntungan")
-poin2_val = st.sidebar.text_input("Nilai 2:", value="35.5%")
+# Slide 1: Cover
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Slide 1: Cover Utama**")
+s1_title = st.sidebar.text_input("Judul Cover:", value="5 RAHASIA MANAJEMEN KEUANGAN BISNIS")
+s1_subtitle = st.sidebar.text_input("Sub-Judul Cover:", value="Tips Praktis untuk Memaksimalkan Margin Keuntungan")
 
-poin3_label = st.sidebar.text_input("Label 3:", value="Klien Aktif")
-poin3_val = st.sidebar.text_input("Nilai 3:", value="42 Perusahaan")
+# Slide 2: Poin Utama 1
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Slide 2: Poin Pertama**")
+s2_title = st.sidebar.text_input("Judul Slide 2:", value="01. Lakukan Separation Account")
+s2_body = st.sidebar.text_area("Isi Slide 2:", value="Pisahkan dengan tegas rekening pribadi dan rekening operasional bisnis untuk menjaga ketepatan pembukuan.")
 
-catatan = st.sidebar.text_area("Catatan Tambahan:", value="Pertumbuhan stabil dipicu oleh peningkatan layanan konsultasi perpajakan.")
+# Slide 3: Poin Utama 2
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Slide 3: Poin Kedua**")
+s3_title = st.sidebar.text_input("Judul Slide 3:", value="02. Hitung Margin Secara Presisi")
+s3_body = st.sidebar.text_area("Isi Slide 3:", value="Pastikan kalkulasi HPP mencakup seluruh biaya tersembunyi agar penetapan harga jual tidak tergerus inflasi.")
 
-# Template HTML & CSS untuk Infografis
+# Slide 4: Call to Action (CTA)
+st.sidebar.markdown("---")
+st.sidebar.markdown("**Slide 4: Penutup / CTA**")
+s4_title = st.sidebar.text_input("Judul Slide 4:", value="Butuh Bantuan Pembukuan & Pajak?")
+s4_body = st.sidebar.text_area("Isi Slide 4:", value="Konsultasikan kebutuhan laporan keuangan bisnis Anda bersama tim ahli akuntan kami.")
+s4_cta = st.sidebar.text_input("Pesan Tombol CTA:", value="Simpan & Bagikan Postingan Ini 📌")
+
+# Template HTML & JS untuk Render Multi-Slide Carousel
 html_code = f"""
-<div style="
-    background-color: {bg_color};
-    border-top: 8px solid {theme_color};
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    color: #1F2937;
-    margin-top: 10px;
-">
-    <h2 style="color: {theme_color}; margin-bottom: 4px; font-size: 28px;">{judul}</h2>
-    <p style="color: #6B7280; font-size: 16px; margin-top: 0; margin-bottom: 24px;">{subjudul}</p>
-    
-    <div style="display: flex; gap: 15px; justify-content: space-between; margin-bottom: 24px; flex-wrap: wrap;">
-        <div style="flex: 1; min-width: 150px; background: white; padding: 15px; border-radius: 8px; border-left: 4px solid {theme_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <div style="font-size: 13px; color: #6B7280; font-weight: bold; text-transform: uppercase;">{poin1_label}</div>
-            <div style="font-size: 20px; font-weight: bold; color: {theme_color}; margin-top: 5px;">{poin1_val}</div>
+<!DOCTYPE html>
+<html>
+<head>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <style>
+        body {{
+            font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+            background: #0d1117;
+            margin: 0;
+            padding: 20px;
+            color: #fff;
+        }}
+        .carousel-container {{
+            display: flex;
+            gap: 20px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }}
+        .slide {{
+            width: 320px;
+            height: 400px;
+            background: {bg_style};
+            border-radius: 16px;
+            padding: 30px 25px;
+            box-sizing: border-box;
+            flex-shrink: 0;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+        }}
+        .slide-number {{
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: {accent_color};
+            font-weight: 700;
+        }}
+        .slide-title {{
+            font-size: 20px;
+            font-weight: 800;
+            line-height: 1.3;
+            margin-top: 10px;
+            color: {text_color};
+        }}
+        .slide-body {{
+            font-size: 13px;
+            line-height: 1.6;
+            opacity: 0.9;
+            margin-top: 15px;
+            color: #e2e8f0;
+        }}
+        .cta-btn {{
+            background: {accent_color};
+            color: #000;
+            padding: 10px 15px;
+            border-radius: 8px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+            margin-top: 15px;
+        }}
+        .action-bar {{
+            margin-top: 25px;
+            text-align: center;
+        }}
+        .download-btn {{
+            background-color: {accent_color};
+            color: #000;
+            font-weight: bold;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }}
+        .download-btn:hover {{
+            opacity: 0.9;
+        }}
+    </style>
+</head>
+<body>
+
+<div class="carousel-container">
+    <!-- Slide 1 -->
+    <div class="slide" id="slide-1">
+        <div>
+            <div class="slide-number">SLIDE 1 / COVER</div>
+            <div class="slide-title" style="font-size: 22px; margin-top: 20px;">{s1_title}</div>
+            <div class="slide-body" style="color: {accent_color}; font-weight: 600; font-size: 14px; margin-top: 15px;">{s1_subtitle}</div>
         </div>
-        <div style="flex: 1; min-width: 150px; background: white; padding: 15px; border-radius: 8px; border-left: 4px solid {theme_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <div style="font-size: 13px; color: #6B7280; font-weight: bold; text-transform: uppercase;">{poin2_label}</div>
-            <div style="font-size: 20px; font-weight: bold; color: {theme_color}; margin-top: 5px;">{poin2_val}</div>
-        </div>
-        <div style="flex: 1; min-width: 150px; background: white; padding: 15px; border-radius: 8px; border-left: 4px solid {theme_color}; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-            <div style="font-size: 13px; color: #6B7280; font-weight: bold; text-transform: uppercase;">{poin3_label}</div>
-            <div style="font-size: 20px; font-weight: bold; color: {theme_color}; margin-top: 5px;">{poin3_val}</div>
-        </div>
+        <div class="slide-number">SWIPE ME ➔</div>
     </div>
-    
-    <div style="background: white; padding: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.05);">
-        <strong style="color: {theme_color}; font-size: 14px;">📌 Ringkasan Eksekutif:</strong>
-        <p style="margin-top: 8px; margin-bottom: 0; font-size: 14px; line-height: 1.5; color: #374151;">{catatan}</p>
+
+    <!-- Slide 2 -->
+    <div class="slide" id="slide-2">
+        <div>
+            <div class="slide-number">SLIDE 2 / POIN 1</div>
+            <div class="slide-title">{s2_title}</div>
+            <div class="slide-body">{s2_body}</div>
+        </div>
+        <div class="slide-number">SLIDE 2</div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="slide" id="slide-3">
+        <div>
+            <div class="slide-number">SLIDE 3 / POIN 2</div>
+            <div class="slide-title">{s3_title}</div>
+            <div class="slide-body">{s3_body}</div>
+        </div>
+        <div class="slide-number">SLIDE 3</div>
+    </div>
+
+    <!-- Slide 4 -->
+    <div class="slide" id="slide-4">
+        <div>
+            <div class="slide-number">SLIDE 4 / CTA</div>
+            <div class="slide-title">{s4_title}</div>
+            <div class="slide-body">{s4_body}</div>
+        </div>
+        <div class="cta-btn">{s4_cta}</div>
     </div>
 </div>
+
+<div class="action-bar">
+    <button class="download-btn" onclick="downloadAllSlides()">📸 Unduh Semua Slide (PNG)</button>
+</div>
+
+<script>
+function downloadSlide(slideId, filename) {{
+    const element = document.getElementById(slideId);
+    return html2canvas(element, {{ scale: 2 }}).then(canvas => {{
+        const link = document.createElement('a');
+        link.download = filename;
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+    }});
+}}
+
+async function downloadAllSlides() {{
+    await downloadSlide('slide-1', 'Carousel_Slide_1.png');
+    await downloadSlide('slide-2', 'Carousel_Slide_2.png');
+    await downloadSlide('slide-3', 'Carousel_Slide_3.png');
+    await downloadSlide('slide-4', 'Carousel_Slide_4.png');
+}}
+</script>
+
+</body>
+</html>
 """
 
-# Tampilan Hasil Infografis
-st.subheader("🖼️ Preview Infografis Anda")
-st.components.v1.html(html_code, height=400, scrolling=True)
-
-st.divider()
-
-# Fitur Download HTML
-st.download_button(
-    label="📥 Download Hasil Infografis (HTML)",
-    data=html_code,
-    file_name="infografis_ringkasan.html",
-    mime="text/html"
-)
+# Render ke Tampilan Streamlit
+components.html(html_code, height=520, scrolling=True)
